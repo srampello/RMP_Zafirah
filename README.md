@@ -4,6 +4,14 @@
 
 Repositorio principal de **Zafirah** (زافيرة), seguidor de línea de competición de RMP Robotics. Es el robot que se usa como plataforma de pruebas: los cambios de control se ensayan primero acá.
 
+<p align="center">
+  <img src="images/logos/zafirah-logo.png" alt="Logo Zafirah" width="420">
+</p>
+
+<p align="center">
+  <img src="images/zafirah.png" alt="Zafirah" width="520">
+</p>
+
 ## Configuración actual
 
 - Arduino Nano (ATmega328P, 16 MHz)
@@ -56,6 +64,7 @@ RMP_Zafirah/
 │   └── CONEXIONES.md
 ├── firmware/
 │   └── Zafirah/
+├── images/
 ├── CHANGELOG.md
 └── index.html
 ```
