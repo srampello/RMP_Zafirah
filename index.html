@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="ZAFIRAH: seguidor de línea de RMP Robotics con Arduino Nano, 8 sensores QRE1113GR, TB6612FNG y motores N20. Plataforma de pruebas de control.">
+  <title>ZAFIRAH — RMP Robotics</title>
+  <link rel="icon" href="/RMP/assets/images/rmp-logo.webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/RMP/assets/css/styles.css?v=62b8faf1">
+  <style>.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}</style>
+  
+</head>
+<body>
+  <a class="skip" href="#informe">Ir al informe</a>
+
+  <header class="bar">
+    <a href="/RMP/"><img src="/RMP/assets/images/rmp-logo.webp" alt="" width="26" height="26"> RMP Robotics</a>
+    <span class="bar-title">ZAFIRAH</span>
+    <nav class="bar-nav" aria-label="Secciones">
+      <a href="#informe">Informe técnico</a>
+      
+      <a class="gh" href="https://github.com/srampello/RMP_Zafirah" target="_blank" rel="noreferrer">GitHub</a>
+    </nav>
+  </header>
+
+  <section class="hero"><div class="hero-copy"><p class="hero-kicker">Seguidor de línea</p><h1 style="--chars: 7">ZAFIRAH<span class="ver">v0.2 con Arduino Nano</span></h1><p class="hero-lead">Seguidor de línea de RMP Robotics y banco de pruebas del equipo: ocho sensores, un Arduino Nano y un PID cada 2 ms.</p><div class="hero-actions"><a class="btn btn-solid" href="#sensado">Conocer el robot</a><a class="btn" href="#informe">Leer el informe</a></div></div><div class="hero-art"><svg class="draw draw-hero" viewBox="0 0 240 280" role="img" aria-label="Vista superior de Zafirah: barra recta de 8 sensores, Arduino Nano y dos motores N20"><g class="grid"><line x1="0" y1="0" x2="0" y2="280"/><line x1="20" y1="0" x2="20" y2="280"/><line x1="40" y1="0" x2="40" y2="280"/><line x1="60" y1="0" x2="60" y2="280"/><line x1="80" y1="0" x2="80" y2="280"/><line x1="100" y1="0" x2="100" y2="280"/><line x1="120" y1="0" x2="120" y2="280"/><line x1="140" y1="0" x2="140" y2="280"/><line x1="160" y1="0" x2="160" y2="280"/><line x1="180" y1="0" x2="180" y2="280"/><line x1="200" y1="0" x2="200" y2="280"/><line x1="220" y1="0" x2="220" y2="280"/><line x1="240" y1="0" x2="240" y2="280"/><line x1="0" y1="0" x2="240" y2="0"/><line x1="0" y1="20" x2="240" y2="20"/><line x1="0" y1="40" x2="240" y2="40"/><line x1="0" y1="60" x2="240" y2="60"/><line x1="0" y1="80" x2="240" y2="80"/><line x1="0" y1="100" x2="240" y2="100"/><line x1="0" y1="120" x2="240" y2="120"/><line x1="0" y1="140" x2="240" y2="140"/><line x1="0" y1="160" x2="240" y2="160"/><line x1="0" y1="180" x2="240" y2="180"/><line x1="0" y1="200" x2="240" y2="200"/><line x1="0" y1="220" x2="240" y2="220"/><line x1="0" y1="240" x2="240" y2="240"/><line x1="0" y1="260" x2="240" y2="260"/><line x1="0" y1="280" x2="240" y2="280"/></g><path class="track" d="M160 290 C160 220 118 200 120 140 C122 80 120 40 120 -10"/><rect class="body" x="67.8" y="56" width="104.5" height="20" rx="3"/><path class="soft" d="M104 76 L108 164 M136 76 L132 164"/><rect class="body" x="86" y="164" width="68" height="76" rx="5"/><rect class="body" x="68" y="190" width="16" height="34" rx="3"/><rect class="body" x="156" y="190" width="16" height="34" rx="3"/><rect class="soft" x="100" y="174" width="18" height="44" rx="1"/><rect class="soft" x="124" y="186" width="18" height="18"/><circle class="sensor" style="--i:0" cx="76.8" cy="66.0" r="3.2"/><circle class="sensor" style="--i:1" cx="89.1" cy="66.0" r="3.2"/><circle class="sensor" style="--i:2" cx="101.5" cy="66.0" r="3.2"/><circle class="sensor" style="--i:3" cx="113.8" cy="66.0" r="3.2"/><circle class="sensor" style="--i:4" cx="126.2" cy="66.0" r="3.2"/><circle class="sensor" style="--i:5" cx="138.5" cy="66.0" r="3.2"/><circle class="sensor" style="--i:6" cx="150.9" cy="66.0" r="3.2"/><circle class="sensor" style="--i:7" cx="163.2" cy="66.0" r="3.2"/></svg></div></section>
+
+  <section class="statement">
+    <h2>Simple, para probar rápido.</h2>
+    <p>Zafirah compite con el hardware más sencillo del equipo. Cada idea de control se prueba primero en este robot antes de pasar a los demás.</p>
+  </section>
+
+<section class="feat" id="sensado">
+  <div class="feat-art"><svg class="draw" viewBox="0 0 240 280" role="img" aria-label="Vista superior de Zafirah: barra recta de 8 sensores, Arduino Nano y dos motores N20"><g class="grid"><line x1="0" y1="0" x2="0" y2="280"/><line x1="20" y1="0" x2="20" y2="280"/><line x1="40" y1="0" x2="40" y2="280"/><line x1="60" y1="0" x2="60" y2="280"/><line x1="80" y1="0" x2="80" y2="280"/><line x1="100" y1="0" x2="100" y2="280"/><line x1="120" y1="0" x2="120" y2="280"/><line x1="140" y1="0" x2="140" y2="280"/><line x1="160" y1="0" x2="160" y2="280"/><line x1="180" y1="0" x2="180" y2="280"/><line x1="200" y1="0" x2="200" y2="280"/><line x1="220" y1="0" x2="220" y2="280"/><line x1="240" y1="0" x2="240" y2="280"/><line x1="0" y1="0" x2="240" y2="0"/><line x1="0" y1="20" x2="240" y2="20"/><line x1="0" y1="40" x2="240" y2="40"/><line x1="0" y1="60" x2="240" y2="60"/><line x1="0" y1="80" x2="240" y2="80"/><line x1="0" y1="100" x2="240" y2="100"/><line x1="0" y1="120" x2="240" y2="120"/><line x1="0" y1="140" x2="240" y2="140"/><line x1="0" y1="160" x2="240" y2="160"/><line x1="0" y1="180" x2="240" y2="180"/><line x1="0" y1="200" x2="240" y2="200"/><line x1="0" y1="220" x2="240" y2="220"/><line x1="0" y1="240" x2="240" y2="240"/><line x1="0" y1="260" x2="240" y2="260"/><line x1="0" y1="280" x2="240" y2="280"/></g><path class="track" d="M160 290 C160 220 118 200 120 140 C122 80 120 40 120 -10"/><rect class="body" x="67.8" y="56" width="104.5" height="20" rx="3"/><path class="soft" d="M104 76 L108 164 M136 76 L132 164"/><rect class="body" x="86" y="164" width="68" height="76" rx="5"/><rect class="body" x="68" y="190" width="16" height="34" rx="3"/><rect class="body" x="156" y="190" width="16" height="34" rx="3"/><rect class="soft" x="100" y="174" width="18" height="44" rx="1"/><rect class="soft" x="124" y="186" width="18" height="18"/><circle class="sensor" style="--i:0" cx="76.8" cy="66.0" r="3.2"/><circle class="sensor" style="--i:1" cx="89.1" cy="66.0" r="3.2"/><circle class="sensor" style="--i:2" cx="101.5" cy="66.0" r="3.2"/><circle class="sensor" style="--i:3" cx="113.8" cy="66.0" r="3.2"/><circle class="sensor" style="--i:4" cx="126.2" cy="66.0" r="3.2"/><circle class="sensor" style="--i:5" cx="138.5" cy="66.0" r="3.2"/><circle class="sensor" style="--i:6" cx="150.9" cy="66.0" r="3.2"/><circle class="sensor" style="--i:7" cx="163.2" cy="66.0" r="3.2"/></svg></div>
+  <div class="feat-copy">
+    <p class="kicker">Sensado</p>
+    <h2>Ocho sensores, ocho entradas.</h2>
+    <p>Los QRE1113GR van directo a A0–A7 del Arduino Nano, sin multiplexor. Con el ADC acelerado, los ocho sensores con tres muestras cada uno se leen en menos de un milisegundo.</p>
+    <dl class="stats">
+      <div><dt>Sensores QRE1113GR</dt><dd>8</dd></div>
+      <div><dt>Muestras por sensor</dt><dd>3</dd></div>
+      <div><dt>Lectura completa</dt><dd>0,7<small>ms</small></dd></div>
+      <div><dt>Rango de posición</dt><dd>0–7000</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="feat flip" id="control">
+  <div class="feat-art"><pre>cada 2 ms
+  posición  ← readLine()        0–7000
+  error     = posición − 3500
+  PID       → corrección
+
+recta  |error| &lt; 300 por 200 ms  → 190
+curva  |error| &gt; 2500           → 135
+normal                           → 170</pre></div>
+  <div class="feat-copy">
+    <p class="kicker">Control</p>
+    <h2>Un PID cada dos milisegundos.</h2>
+    <p>El control corre a ritmo fijo y decide la velocidad base según el error: acelera cuando la recta se sostiene, frena apenas entra a una curva y sube con rampa al salir.</p>
+    <dl class="stats">
+      <div><dt>Ciclo de control</dt><dd>2<small>ms</small></dd></div>
+      <div><dt>Velocidad en recta</dt><dd>190<small>PWM</small></dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="feat" id="traccion">
+  <div class="feat-art"><pre>TB6612FNG
+  canal A  →  motor derecho     D9 · D7 · D8
+  canal B  →  motor izquierdo   D10 · D4 · D5
+  PWM Timer1  ~31 kHz
+
+rueda interna:  −60 … 255</pre></div>
+  <div class="feat-copy">
+    <p class="kicker">Tracción</p>
+    <h2>La rueda interna también empuja para atrás.</h2>
+    <p>Dos N20 de 2000 rpm comandados por un TB6612FNG. En curvas cerradas la rueda interna puede girar hacia atrás, así el robot pivotea en lugar de abrirse, y el PWM a 31 kHz da un control más suave.</p>
+    <dl class="stats">
+      <div><dt>Motores N20</dt><dd>2000<small>rpm</small></dd></div>
+      <div><dt>PWM de motores</dt><dd>31<small>kHz</small></dd></div>
+    </dl>
+  </div>
+</section>
+
+  <div class="report-title">
+    <h2>Informe técnico</h2>
+    <p>Hardware, pinout, firmware y estado del proyecto. También está en la <a href="/RMP/robots/zafirah/">ficha de RMP Robotics</a>.</p>
+  </div>
+
+  <div class="report" id="informe">
+    <aside class="side">
+      
+      <nav class="outline" aria-label="Índice del informe">
+        <p>Índice</p>
+        <ol><li><a href="#introduccion">Introducción</a></li><li><a href="#hardware">Hardware</a><ol><li><a href="#sensores">Sensores</a></li><li><a href="#driver">Driver</a></li></ol></li><li><a href="#pinout">Pinout</a></li><li><a href="#firmware">Firmware</a><ol><li><a href="#lectura">Lectura y control</a></li><li><a href="#velocidad">Velocidad</a></li><li><a href="#largada">Calibración y largada</a></li></ol></li><li><a href="#estado">Estado y próximos pasos</a></li><li><a href="#archivos">Archivos</a></li></ol>
+      </nav>
+    </aside>
+
+    <article class="doc">
+<section id="introduccion">
+  <h2>Introducción</h2>
+  <p>Zafirah (زافيرة) compite en seguidor de línea junto a los otros robots del equipo. Es el más simple: un <strong>Arduino Nano</strong>, una barra recta de ocho sensores y un TB6612FNG. Por eso se usa como banco de pruebas para el control.</p>
+  <p>La versión 0.2 (1 de noviembre de 2026) reorganizó el firmware para que el PID corra casi tres veces más seguido, con la misma lógica de recta y arranque suave de la v0.1.</p>
+</section>
+
+<section id="hardware">
+  <h2>Hardware</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Área</th><th>Componente</th></tr></thead>
+    <tbody>
+      <tr><td>Controlador</td><td>Arduino Nano (ATmega328P, 16 MHz)</td></tr>
+      <tr><td>Sensores</td><td>8 × QRE1113GR en las entradas analógicas A0 a A7</td></tr>
+      <tr><td>Driver</td><td>TB6612FNG: canal A derecho, canal B izquierdo</td></tr>
+      <tr><td>Tracción</td><td>2 × N20 6 V 2000 rpm</td></tr>
+      <tr><td>Interfaz</td><td>Botón de calibración, largada y pausa; LED de estado y LED de largada</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 id="sensores">Sensores</h3>
+  <p>Los ocho QRE1113GR se leen directo con el ADC del Nano, con los emisores siempre encendidos. A6 y A7 solo existen como entradas analógicas en el Nano, así que la barra ocupa justo las ocho. A0 queda a la izquierda y A7 a la derecha.</p>
+
+  <h3 id="driver">Driver</h3>
+  <p>El TB6612FNG queda habilitado con STBY en alto durante todo el funcionamiento. Desde la v0.2 el PWM de los dos motores sale del Timer1 a unos 31 kHz, en lugar de los 490 Hz de fábrica.</p>
+</section>
+
+<section id="pinout">
+  <h2>Pinout</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th class="num">Pin</th><th>Función</th></tr></thead>
+    <tbody>
+      <tr><td class="num">A0–A7</td><td>Sensores QRE1113GR, de izquierda a derecha</td></tr>
+      <tr><td class="num">D2</td><td>Botón, activo en LOW</td></tr>
+      <tr><td class="num">D3</td><td>LED de largada</td></tr>
+      <tr><td class="num">D4</td><td>BIN1</td></tr>
+      <tr><td class="num">D5</td><td>BIN2</td></tr>
+      <tr><td class="num">D6</td><td>STBY del TB6612FNG</td></tr>
+      <tr><td class="num">D7</td><td>AIN1</td></tr>
+      <tr><td class="num">D8</td><td>AIN2</td></tr>
+      <tr><td class="num">D9</td><td>PWMA, motor derecho</td></tr>
+      <tr><td class="num">D10</td><td>PWMB, motor izquierdo</td></tr>
+      <tr><td class="num">D13</td><td>LED de estado, encendido en recta</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="firmware">
+  <h2>Firmware</h2>
+  <h3 id="lectura">Lectura y control</h3>
+  <p>El PID corre a ritmo fijo cada <strong>2 ms</strong>. La v0.1 leía los sensores dos veces por ciclo y tardaba unos 5,5 ms; ahora se leen una sola vez y el ADC trabaja con prescaler 32, así que los ocho sensores con tres muestras cada uno se leen en unos 0,7 ms. La posición de la línea va de 0 a 7000, con el centro en 3500.</p>
+  <p>La derivada y la integral se calculan por ciclo: al acortar el período, KD y KI se reescalaron para que el comportamiento inicial sea equivalente.</p>
+
+  <h3 id="velocidad">Velocidad</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Situación</th><th>Condición</th><th>Base</th></tr></thead>
+    <tbody>
+      <tr><td>Normal</td><td>—</td><td>170</td></tr>
+      <tr><td>Recta</td><td>Error menor a 300 durante 200 ms</td><td>190</td></tr>
+      <tr><td>Curva fuerte</td><td>Error mayor a 2500</td><td>135</td></tr>
+    </tbody>
+  </table></div>
+  <p>La base sube con rampa y baja al instante, así el robot frena apenas entra a una curva. En curvas cerradas la rueda interna puede ir hacia atrás, hasta 60 de PWM.</p>
+
+  <h3 id="largada">Calibración y largada</h3>
+  <p>Todo se maneja con un botón: la primera pulsación calibra durante 5 s, la segunda enciende el LED de largada y el robot arranca al soltarlo. Mantener apretado el botón en carrera frena los motores; al soltarlo reinicia el PID y vuelve a arrancar con rampa.</p>
+
+  <pre>KP 0.033 · KD 0.25
+KI 0.00007
+VEL_MAX 170 · VEL_RECTA 190
+VEL_CURVA 135 · VEL_REVERSA 60
+PERIODO_US 2000</pre>
+</section>
+
+<section id="estado">
+  <h2>Estado y próximos pasos</h2>
+  <ol class="steps">
+    <li class="done"><span><strong>v0.1.</strong> PID con velocidad extra en recta, arranque suave y pausa con el botón. Compitiendo.</span></li>
+    <li class="done"><span><strong>v0.2.</strong> Ciclo fijo de 2 ms, ADC y PWM más rápidos, reversa de la rueda interna y freno en curva.</span></li>
+    <li><span>Probar la v0.2 en pista y ajustar KP, KD y la reversa.</span></li>
+    <li><span>Subir las velocidades de a poco y ajustar el freno en curva según la pista.</span></li>
+  </ol>
+</section>
+
+<section id="archivos">
+  <h2>Archivos</h2>
+  <div class="files">
+    <a href="https://github.com/srampello/RMP_Zafirah/tree/master/firmware/Zafirah">Firmware y parámetros <span>Arduino</span></a>
+    <a href="https://github.com/srampello/RMP_Zafirah/blob/master/docs/CONEXIONES.md">Conexiones <span>Markdown</span></a>
+    <a href="https://github.com/srampello/RMP_Zafirah/blob/master/CHANGELOG.md">Historial de cambios <span>Markdown</span></a>
+  </div>
+</section>
+
+      <footer class="doc-foot">
+        <a href="/RMP_unicum/">← UNICUM</a>
+        <a href="/RMP/">Todos los robots</a>
+        <a href="/RMP_Lea_Paredes/">LEA_PAREDES →</a>
+      </footer>
+    </article>
+  </div>
+
+  <footer class="site-foot robot-foot">
+    <span>ZAFIRAH es un proyecto de <a href="/RMP/">RMP Robotics</a></span>
+    <nav aria-label="Otros robots"><a href="/RMP_Deimonyag/">DEIMONYAG</a><a href="/RMP_unicum/">UNICUM</a><a href="/RMP_Lea_Paredes/">LEA_PAREDES</a><a href="/AUS_KIM/">AUS_KIM</a></nav>
+  </footer>
+
+  <script src="/RMP/assets/js/robot.js?v=0282eab3" defer></script>
+  
+</body>
+</html>
