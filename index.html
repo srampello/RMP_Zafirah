@@ -52,11 +52,11 @@
   <div class="feat-copy">
     <p class="kicker">Sensado</p>
     <h2>Ocho sensores, ocho entradas.</h2>
-    <p>Los QRE1113GR van directo a A0–A7 del Arduino Nano, sin multiplexor. Con el ADC acelerado, los ocho sensores con tres muestras cada uno se leen en menos de un milisegundo.</p>
+    <p>Los QRE1113GR van directo a A0–A7 del Arduino Nano, sin multiplexor ni librerías. Cada sensor se convierte en 8 bits a 1 MHz, y solo los que superan el umbral de calibración entran en la posición.</p>
     <dl class="stats">
       <div><dt>Sensores QRE1113GR</dt><dd>8</dd></div>
-      <div><dt>Muestras por sensor</dt><dd>3</dd></div>
-      <div><dt>Lectura completa</dt><dd>0,7<small>ms</small></dd></div>
+      <div><dt>Umbral de línea</dt><dd>50<small>%</small></dd></div>
+      <div><dt>Lectura completa</dt><dd>0,2<small>ms</small></dd></div>
       <div><dt>Rango de posición</dt><dd>0–7000</dd></div>
     </dl>
   </div>
@@ -64,17 +64,18 @@
 
 <section class="feat" id="control">
   <div class="feat-art"><pre>cada 2 ms
-  posición  ← readLine()        0–7000
+  posición  ← leerLinea()       0–7000
   error     = posición − 3500
   PID       → corrección
 
 recta  |error| &lt; 300 por 200 ms  → 190
 curva  |error| &gt; 2500           → 135
-normal                           → 170</pre></div>
+normal                           → 170
+sin línea  último lado visto     → 220 / −150</pre></div>
   <div class="feat-copy">
     <p class="kicker">Control</p>
     <h2>Un PID cada dos milisegundos.</h2>
-    <p>El control corre a ritmo fijo y decide la velocidad base según el error: acelera cuando la recta se sostiene, frena apenas entra a una curva y sube con rampa al salir.</p>
+    <p>El control corre a ritmo fijo y decide la velocidad base según el error: acelera cuando la recta se sostiene, frena apenas entra a una curva y sube con rampa al salir. Si pierde la línea, gira fuerte hacia el último lado donde la vio.</p>
     <dl class="stats">
       <div><dt>Ciclo de control</dt><dd>2<small>ms</small></dd></div>
       <div><dt>Velocidad en recta</dt><dd>190<small>PWM</small></dd></div>
@@ -88,7 +89,8 @@ normal                           → 170</pre></div>
   canal B  →  motor izquierdo   D10 · D4 · D5
   PWM Timer1  ~31 kHz
 
-rueda interna:  −60 … 255</pre></div>
+rueda interna:  −60 … 255
+fuera de línea: −150 / 220</pre></div>
   <div class="feat-copy">
     <p class="kicker">Tracción</p>
     <h2>La rueda interna también empuja para atrás.</h2>
@@ -110,7 +112,7 @@ rueda interna:  −60 … 255</pre></div>
       <figure class="side-media"><img src="/RMP/assets/images/zafirah.webp" alt="Emblema de Zafirah: una lámpara dorada con humo violeta sobre el nombre en letras doradas y en árabe" class="contain" loading="lazy"><figcaption>Zafirah, زافيرة</figcaption></figure>
       <nav class="outline" aria-label="Índice del informe">
         <p>Índice</p>
-        <ol><li><a href="#introduccion">Introducción</a></li><li><a href="#hardware">Hardware</a><ol><li><a href="#sensores">Sensores</a></li><li><a href="#driver">Driver</a></li></ol></li><li><a href="#pinout">Pinout</a></li><li><a href="#firmware">Firmware</a><ol><li><a href="#lectura">Lectura y control</a></li><li><a href="#velocidad">Velocidad</a></li><li><a href="#largada">Calibración y largada</a></li></ol></li><li><a href="#estado">Estado y próximos pasos</a></li><li><a href="#archivos">Archivos</a></li></ol>
+        <ol><li><a href="#introduccion">Introducción</a></li><li><a href="#hardware">Hardware</a><ol><li><a href="#sensores">Sensores</a></li><li><a href="#driver">Driver</a></li></ol></li><li><a href="#pinout">Pinout</a></li><li><a href="#firmware">Firmware</a><ol><li><a href="#lectura">Lectura y control</a></li><li><a href="#fuera">Fuera de línea</a></li><li><a href="#velocidad">Velocidad</a></li><li><a href="#largada">Calibración y largada</a></li></ol></li><li><a href="#estado">Estado y próximos pasos</a></li><li><a href="#archivos">Archivos</a></li></ol>
       </nav>
     </aside>
 
@@ -119,7 +121,7 @@ rueda interna:  −60 … 255</pre></div>
   <h2>Introducción</h2>
   <p>Zafirah (زافيرة) compite en seguidor de línea junto a los otros robots del equipo. Es el más simple: un <strong>Arduino Nano</strong>, una barra recta de ocho sensores y un TB6612FNG. Por eso se usa como banco de pruebas para el control.</p>
   <figure><img src="/RMP/assets/images/zafirah-foto.webp" alt="Zafirah armado, con la barra de sensores al final de un brazo largo" loading="lazy"></figure>
-  <p>La versión 0.2 (1 de noviembre de 2026) reorganizó el firmware para que el PID corra casi tres veces más seguido, con la misma lógica de recta y arranque suave de la v0.1.</p>
+  <p>La versión 0.2 (1 de noviembre de 2026) reorganizó el firmware para que el PID corra casi tres veces más seguido. La 0.3 (5 de noviembre) cambió la lectura de sensores y agregó un giro de recuperación al perder la línea, con ideas tomadas de <a href="https://github.com/EXOTIC-TEAM-MX/EVA-RT">EVA-RT</a>, de EXOTIC TEAM MX.</p>
 </section>
 
 <section id="hardware">
@@ -136,7 +138,7 @@ rueda interna:  −60 … 255</pre></div>
   </table></div>
 
   <h3 id="sensores">Sensores</h3>
-  <p>La barra va al final de un brazo largo, bien adelante del eje de las ruedas: el robot ve la curva antes y la corrección actúa con más palanca. Los ocho QRE1113GR se leen directo con el ADC del Nano, con los emisores siempre encendidos. A6 y A7 solo existen como entradas analógicas en el Nano, así que la barra ocupa justo las ocho. A0 queda a la izquierda y A7 a la derecha.</p>
+  <p>La barra va al final de un brazo largo, bien adelante del eje de las ruedas: el robot ve la curva antes y la corrección actúa con más palanca. Los ocho QRE1113GR se leen directo con el ADC del Nano, por registros y sin librerías, con los emisores siempre encendidos. A6 y A7 solo existen como entradas analógicas en el Nano, así que la barra ocupa justo las ocho. A0 queda a la izquierda y A7 a la derecha.</p>
 
   <h3 id="driver">Driver</h3>
   <p>El TB6612FNG queda habilitado con STBY en alto durante todo el funcionamiento. Desde la v0.2 el PWM de los dos motores sale del Timer1 a unos 31 kHz, en lugar de los 490 Hz de fábrica.</p>
@@ -165,8 +167,12 @@ rueda interna:  −60 … 255</pre></div>
 <section id="firmware">
   <h2>Firmware</h2>
   <h3 id="lectura">Lectura y control</h3>
-  <p>El PID corre a ritmo fijo cada <strong>2 ms</strong>. La v0.1 leía los sensores dos veces por ciclo y tardaba unos 5,5 ms; ahora se leen una sola vez y el ADC trabaja con prescaler 32, así que los ocho sensores con tres muestras cada uno se leen en unos 0,7 ms. La posición de la línea va de 0 a 7000, con el centro en 3500.</p>
+  <p>El PID corre a ritmo fijo cada <strong>2 ms</strong>. Cada sensor se convierte en 8 bits a 1 MHz, así que los ocho se leen en unos 0,2 ms. La v0.1 leía todo dos veces por ciclo y tardaba unos 5,5 ms.</p>
+  <p>Cada lectura se pasa a una escala de 0 (fondo) a 255 (línea) con la calibración, y lo que queda por debajo del umbral del 50 % cuenta como fondo. La posición es el promedio ponderado de los sensores que de verdad ven la línea: de 0 a 7000, con el centro en 3500.</p>
   <p>La derivada y la integral se calculan por ciclo: al acortar el período, KD y KI se reescalaron para que el comportamiento inicial sea equivalente.</p>
+
+  <h3 id="fuera">Fuera de línea</h3>
+  <p>Si ningún sensor ve la línea, el robot deja el PID y gira fuerte hacia el último lado donde la vio: la rueda externa a 220 hacia adelante y la interna a 150 hacia atrás. Al reencontrarla vuelve al PID sin pico en la derivada.</p>
 
   <h3 id="velocidad">Velocidad</h3>
   <div class="table-wrap"><table>
@@ -180,13 +186,15 @@ rueda interna:  −60 … 255</pre></div>
   <p>La base sube con rampa y baja al instante, así el robot frena apenas entra a una curva. En curvas cerradas la rueda interna puede ir hacia atrás, hasta 60 de PWM.</p>
 
   <h3 id="largada">Calibración y largada</h3>
-  <p>Todo se maneja con un botón: la primera pulsación calibra durante 5 s, la segunda enciende el LED de largada y el robot arranca al soltarlo. Mantener apretado el botón en carrera frena los motores; al soltarlo reinicia el PID y vuelve a arrancar con rampa.</p>
+  <p>La calibración solo guarda un máximo o un mínimo si se repite en diez muestras seguidas, cada una promedio de ocho lecturas: un pico de ruido aislado no la arruina.</p>
+  <p>Todo se maneja con un botón: la primera pulsación calibra durante 5 s con el LED parpadeando, la segunda enciende el LED de largada y el robot arranca al soltarlo. Mantener apretado el botón en carrera frena los motores; al soltarlo reinicia el PID y vuelve a arrancar con rampa.</p>
 
   <pre>KP 0.033 · KD 0.25
 KI 0.00007
 VEL_MAX 170 · VEL_RECTA 190
 VEL_CURVA 135 · VEL_REVERSA 60
-PERIODO_US 2000</pre>
+VEL_FUERA 220 / −150
+UMBRAL_PCT 50 · PERIODO_US 2000</pre>
 </section>
 
 <section id="estado">
@@ -194,7 +202,8 @@ PERIODO_US 2000</pre>
   <ol class="steps">
     <li class="done"><span><strong>v0.1.</strong> PID con velocidad extra en recta, arranque suave y pausa con el botón. Compitiendo.</span></li>
     <li class="done"><span><strong>v0.2.</strong> Ciclo fijo de 2 ms, ADC y PWM más rápidos, reversa de la rueda interna y freno en curva.</span></li>
-    <li><span>Probar la v0.2 en pista y ajustar KP, KD y la reversa.</span></li>
+    <li class="done"><span><strong>v0.3.</strong> Lectura propia en 8 bits, calibración con umbral y giro de recuperación fuera de línea.</span></li>
+    <li><span>Probar la v0.3 en pista y ajustar KP, KD, el umbral y el giro fuera de línea.</span></li>
     <li><span>Subir las velocidades de a poco y ajustar el freno en curva según la pista.</span></li>
   </ol>
 </section>

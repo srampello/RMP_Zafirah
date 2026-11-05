@@ -41,11 +41,11 @@ Repositorio principal de **Zafirah** (زافيرة), seguidor de línea de compe
 
 ### Seguidor — [`firmware/Zafirah/`](firmware/Zafirah/)
 
-PID a ritmo fijo de 2 ms con velocidad extra en recta, freno en curva, reversa de la rueda interna y arranque con rampa. Usa la librería **QTRSensors 3.x** de Pololu (la 4.x cambió la API y no compila con este sketch).
+PID a ritmo fijo de 2 ms con velocidad extra en recta, freno en curva, reversa de la rueda interna, arranque con rampa y giro de recuperación cuando pierde la línea. Lee los sensores con su propio código (ADC de 8 bits, calibración con umbral): **no necesita librerías**.
 
 | Paso | Qué hacer |
 |---|---|
-| 1 | Encender y apretar el botón: a los 0,75 s se enciende el LED y calibra 5 s. Pasar la barra sobre la línea y el fondo. |
+| 1 | Encender y apretar el botón: a los 0,75 s el LED empieza a parpadear y calibra 5 s. Pasar la barra varias veces sobre la línea y el fondo. |
 | 2 | Apoyar el robot sobre la línea y apretar el botón: se enciende el LED de largada. |
 | 3 | Al soltar el botón arranca, con la velocidad subiendo en rampa. |
 | 4 | Mantener apretado el botón frena el robot; al soltarlo vuelve a arrancar con rampa. |

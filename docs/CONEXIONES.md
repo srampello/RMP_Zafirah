@@ -20,10 +20,11 @@ Documento de referencia rápida para las conexiones que usa el firmware actual.
 
 ## Sensores
 
-- 8 × QRE1113GR leídos con `QTRSensorsAnalog` en A0–A7, sin pin de emisores (`QTR_NO_EMITTER_PIN`): los LED infrarrojos quedan siempre encendidos.
+- 8 × QRE1113GR en A0–A7, leídos directo por registros del ADC (8 bits, 1 MHz). No hay pin de emisores: los LED infrarrojos quedan siempre encendidos.
 - A6 y A7 solo existen como entradas analógicas en el Nano: no sirven como pines digitales.
 - Orden: A0 a la izquierda y A7 a la derecha, según el sentido de corrección del PID (con la línea bajo A7 la posición sube y el robot dobla a la derecha).
-- Línea blanca (`readLine(..., 1)`). Posición de 0 a 7000, centro en 3500.
+- Línea blanca (`LINEA_BLANCA true`): sobre blanco la lectura cruda es baja. Posición de 0 a 7000, centro en 3500.
+- A4 y A5 se usan como entradas analógicas de sensores, así que el bus I2C del Nano no está disponible.
 
 ## Driver TB6612FNG
 

@@ -2,6 +2,25 @@
 
 Todos los cambios relevantes del proyecto Zafirah se documentan en este archivo.
 
+## [0.3] - 2026-11-05
+
+Ideas tomadas del firmware de [EVA-RT](https://github.com/EXOTIC-TEAM-MX/EVA-RT) (EXOTIC TEAM MX), con implementación propia.
+
+### Cambiado
+- Lectura de sensores propia, sin la librería QTRSensors: ADC de 8 bits a 1 MHz por registros.
+  Los 8 sensores se leen en ~0,2 ms (antes ~0,7 ms).
+- Calibración robusta: un máximo o mínimo solo se guarda si se repite en 10 muestras seguidas
+  (cada una promedio de 8 lecturas). El LED parpadea mientras calibra.
+- Umbral por sensor (`UMBRAL_PCT`, 50 %): lo que queda debajo cuenta como fondo y no entra en la posición.
+
+### Agregado
+- Recuperación fuera de línea: si ningún sensor ve la línea, el robot deja el PID y gira fuerte
+  hacia el último lado donde la vio (`VEL_FUERA_EXT` 220 adelante, `VEL_FUERA_INT` 150 atrás).
+- `LINEA_BLANCA` para elegir línea blanca o negra, y `DESCARTE_ADC` contra el arrastre entre canales.
+
+### Pendiente
+- Probar en pista. Ajustar `UMBRAL_PCT`, `VEL_FUERA_EXT` y `VEL_FUERA_INT`; la v0.2 tampoco se probó todavía.
+
 ## [0.2] - 2026-11-01
 
 ### Cambiado
